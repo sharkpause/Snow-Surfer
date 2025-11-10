@@ -11,18 +11,22 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpSpeed = 5f;
+    [SerializeField] float maxVelocity = 10f;
 
     float gravityScaleAtStart;
 
     bool isMoving = false;
     bool isClimbing = false;
     bool isTouchingLadder = false;
+    bool isJumpHeld = false;
 
     [SerializeField] Transform groundCheck;
     bool isGrounded;
 
     [SerializeField] float coyoteTime = 0.1f;
     float coyoteTimeCounter;
+
+    float cutOffMultiplier = 0.5f;
 
     private void Start()
     {
@@ -47,6 +51,23 @@ public class PlayerMovement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
+        
+        if(isJumpHeld && !Keyboard.current.wKey.isPressed)
+        {
+            isJumpHeld = false;
+            if(rigidbody.linearVelocity.y > Mathf.Epsilon)
+            {
+                Vector2 v = rigidbody.linearVelocity;
+                v.y *= cutOffMultiplier;
+                rigidbody.linearVelocity = v;
+            }
+
+        }
+
+        if(rigidbody.linearVelocity.y > maxVelocity)
+        {
+            rigidbody.linearVelocity = new Vector2(rigidbody.linearVelocity.x, maxVelocity);
+        }
     }
 
     void OnMove(InputValue value)
@@ -56,11 +77,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-       
-
         if ((isGrounded || coyoteTimeCounter > Mathf.Epsilon) && value.isPressed)
         {
-            rigidbody.linearVelocity += new Vector2(0f, jumpSpeed);
+            Vector2 v = rigidbody.linearVelocity;
+            v.y = jumpSpeed;
+            rigidbody.linearVelocity = v;
+            isJumpHeld = true;
         }
     }
 
