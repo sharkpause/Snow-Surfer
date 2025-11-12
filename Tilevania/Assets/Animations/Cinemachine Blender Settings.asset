@@ -23,8 +23,19 @@ MonoBehaviour:
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - From: Idle Camera
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: Death Camera
+    Blend:
+      Style: 1
+      Time: 5
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
     To: '**ANY CAMERA**'
     Blend:
       Style: 1
@@ -34,4 +45,4 @@ MonoBehaviour:
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
+        m_RotationOrder: 4

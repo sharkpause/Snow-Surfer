@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
@@ -12,6 +13,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float maxVelocity = 10f;
+    [SerializeField] float deathVelocity = 17.5f;
+    [SerializeField] float deathTorque = 100f;
+
+    [SerializeField] CinemachineStateDrivenCamera camera;
+    [SerializeField] CinemachineCamera deathCamera;
 
     float gravityScaleAtStart;
 
@@ -28,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     float cutOffMultiplier = 0.5f;
 
+    bool isAlive = true;
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -37,7 +44,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Update()
-    {
+    {  
+        if(!isAlive) { return; }
         Run();
         FlipSprite();
         ClimbLadder();
@@ -68,15 +76,19 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidbody.linearVelocity = new Vector2(rigidbody.linearVelocity.x, maxVelocity);
         }
+
+        Die();
     }
 
     void OnMove(InputValue value)
     {
+        if(!isAlive) { return; }
         moveInput = value.Get<Vector2>();
     }
 
     void OnJump(InputValue value)
     {
+        if(!isAlive) { return; }
         if ((isGrounded || coyoteTimeCounter > Mathf.Epsilon) && value.isPressed)
         {
             Vector2 v = rigidbody.linearVelocity;
@@ -117,5 +129,36 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidbody.gravityScale = gravityScaleAtStart;
         }
+    }
+
+    void Die()
+    {
+        if(collider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        {
+            isAlive = false;
+
+            animator.SetTrigger("Dying");
+
+            DeathCameraActivate();
+
+            rigidbody.linearVelocity = new Vector2(0f, deathVelocity);
+
+            rigidbody.constraints = RigidbodyConstraints2D.None;
+            rigidbody.AddTorque(deathTorque, ForceMode2D.Impulse);
+
+            rigidbody.gravityScale = 5f;
+            gameObject.layer = LayerMask.NameToLayer("Dead");
+        }
+    }
+
+    void DeathCameraActivate()
+    {
+        ICinemachineCamera liveCameraInterface = camera.LiveChild;
+        CinemachineCamera liveCamera = liveCameraInterface as CinemachineCamera;
+        liveCamera.Follow = null;
+        liveCamera.LookAt = null;
+
+        deathCamera.Follow = null;
+        deathCamera.LookAt = null;
     }
 }
