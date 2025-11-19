@@ -19,6 +19,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] CinemachineStateDrivenCamera camera;
     [SerializeField] CinemachineCamera deathCamera;
 
+    [SerializeField] GameObject bullet;
+    [SerializeField] GameObject gun;
+
     float gravityScaleAtStart;
 
     bool isMoving = false;
@@ -98,6 +101,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void OnAttack()
+    {
+        if (!isAlive) { return; }
+
+        Instantiate(bullet, gun.transform.position, transform.rotation);
+    }
+
     void Run()
     {
         Vector2 playerVelocity = new Vector2(moveInput.x * moveSpeed, rigidbody.linearVelocity.y);
@@ -133,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Die()
     {
-        if(collider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if(collider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Hazards")))
         {
             isAlive = false;
 
