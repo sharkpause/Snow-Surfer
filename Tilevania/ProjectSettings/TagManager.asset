@@ -20,7 +20,7 @@ TagManager:
   - Dead
   - Hazards
   - Bullets
-  - 
+  - Interactables
   - 
   - 
   - 
@@ -56,6 +56,9 @@ TagManager:
     locked: 0
   - name: Hazard
     uniqueID: 3516690419
+    locked: 0
+  - name: Interactables
+    uniqueID: 1586190145
     locked: 0
   - name: Player
     uniqueID: 1393576991

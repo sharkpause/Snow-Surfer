@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject gun;
 
     float gravityScaleAtStart;
+    float deathGravityDelay = 5f;
 
     bool isMoving = false;
     bool isClimbing = false;
@@ -106,6 +108,13 @@ public class PlayerMovement : MonoBehaviour
         if (!isAlive) { return; }
 
         Instantiate(bullet, gun.transform.position, transform.rotation);
+        animator.SetBool("isShooting", true);
+    }
+
+    public void StopShootingAnimation()
+    {
+        print('a');
+        animator.SetBool("isShooting", false);
     }
 
     void Run()
@@ -158,7 +167,15 @@ public class PlayerMovement : MonoBehaviour
 
             rigidbody.gravityScale = 5f;
             gameObject.layer = LayerMask.NameToLayer("Dead");
+
+            StartCoroutine(ChangeDeathVelocity());
         }
+    }
+
+    IEnumerator ChangeDeathVelocity()
+    {
+        yield return new WaitForSeconds(deathGravityDelay);
+        rigidbody.bodyType = RigidbodyType2D.Static;
     }
 
     void DeathCameraActivate()

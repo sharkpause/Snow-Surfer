@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour
     float xSpeed;
     float bulletDestroyDelay = 0.05f;
 
+    bool isShooting = false;
+
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
