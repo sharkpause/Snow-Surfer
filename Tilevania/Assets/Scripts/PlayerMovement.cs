@@ -169,9 +169,12 @@ public class PlayerMovement : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Dead");
 
             StartCoroutine(ChangeDeathVelocity());
+
+            FindAnyObjectByType<GameSession>().ProcessPlayerDeath();
         }
     }
 
+    // Stop player from falling forever after death
     IEnumerator ChangeDeathVelocity()
     {
         yield return new WaitForSeconds(deathGravityDelay);

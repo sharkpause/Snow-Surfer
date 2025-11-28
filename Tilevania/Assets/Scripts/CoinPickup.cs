@@ -9,6 +9,9 @@ public class CoinPickup : MonoBehaviour
 
     [SerializeField] AudioClip coinPickupSFX;
 
+    [SerializeField] GameSession gameSession;
+    [SerializeField] int coinValue = 100;
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -20,6 +23,8 @@ public class CoinPickup : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Dead");
 
         float destroyDelay = 1f;
+
+       gameSession.AddToScore(coinValue);
 
         Destroy(gameObject, destroyDelay);
 

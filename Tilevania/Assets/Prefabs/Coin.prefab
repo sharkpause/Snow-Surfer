@@ -265,6 +265,8 @@ MonoBehaviour:
   pickUpVelocity: 15
   fallSpeed: 5
   coinPickupSFX: {fileID: 8300000, guid: f8f20c39280ec274d9e61f4dfdb2bdfa, type: 3}
+  gameSession: {fileID: 4824913479481019082, guid: 9efa43284ba8a92468de698570b0575c, type: 3}
+  coinValue: 100
 --- !u!50 &5441742967194302367
 Rigidbody2D:
   serializedVersion: 5
